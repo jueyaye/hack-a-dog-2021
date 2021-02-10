@@ -34,12 +34,6 @@
       "options": {
         "items": [
           {
-            "href": "https://www.google.com",
-            "type": "link",
-            "key": "link-item",
-            "label": "Open a link"
-          },
-          {
             "type": "event",
             "key": "open-confirmation",
             "label": "Please confirm"
@@ -60,34 +54,15 @@
     },
     {
       "name": "modals",
-      "options": {
-        "definitions": [
-          {
-            "action_label": "Yes",
-            "cancel_label": "Nevermind",
-            "title": "Please verify!",
-            "key": "confirmation-modal",
-            "action_level": "danger",
-            "is_closeable": true,
-            "message": "Are you sure really sure?",
-            "size": "md"
-          }
-        ]
-      }
+      "options": {}
     },
     {
       "name": "side_panels",
-      "options": {
-        "definitions": [
-          {
-            "will_close_on_esc": true,
-            "width": "50%",
-            "source": "panel",
-            "key": "custom-side-panel",
-            "hide_close_button": false
-          }
-        ]
-      }
+      "options": {}
+    },
+    {
+      "name": "widget_context_menu",
+      "options": {}
     }
   ],
   "description": "A hello-world like application used as a starting point for apps",

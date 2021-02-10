@@ -29,7 +29,16 @@ function Widget() {
   }, []);
 
   const onOpenSidePanel = (args:any) => {  
-    client.sidePanel.open('custom-side-panel', {metric})
+    client.sidePanel.open(
+      {
+        willCloseOnEsc: true,
+        width: "50%",
+        source: "panel",
+        key: "custom-side-panel",
+        hideCloseButton: false,
+      },
+      { metric }
+    )
   }
 
   return (
