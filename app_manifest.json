@@ -22,6 +22,12 @@
                 "type": "string",
                 "name": "metric",
                 "label": "Your favorite metric"
+              },
+              {
+                "type": "string",
+                "name": "favorite-cheese",
+                "label": "Your favorite cheese",
+                "enum": ["Chevre", "Gruyere", "Mozzarella"]
               }
             ],
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Emojione_1F44B.svg/1024px-Emojione_1F44B.svg.png"
