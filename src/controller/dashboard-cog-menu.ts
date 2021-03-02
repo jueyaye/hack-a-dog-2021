@@ -2,32 +2,14 @@ import { DDClient } from "@datadog/ui-apps-sdk/dist/client/client";
 import {
   UiAppEventType,
   ModalSize,
-  MenuItemType,
   ModalActionLevel,
 } from "@datadog/ui-apps-sdk";
 
 export const setupDashboardCogMenu = (client: DDClient) => {
-  // provide cog menu items dynamically
+  // provide cog menu items dynamically if needed
   client.dashboardCogMenu.onRequest(() => {
     return {
-      items: [
-        {
-          href: "https://www.google.com",
-          type: MenuItemType.LINK,
-          key: "link-item",
-          label: "Open a link",
-        },
-        {
-          type: MenuItemType.EVENT,
-          key: "open-custom-modal",
-          label: "Open a custom modal",
-        },
-        {
-          type: MenuItemType.EVENT,
-          key: "open-custom-panel",
-          label: "Open a custom side panel with args",
-        },
-      ],
+      items: [],
     };
   });
 
