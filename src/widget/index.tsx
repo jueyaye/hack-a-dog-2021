@@ -1,48 +1,26 @@
-import { init, UiAppEventType } from "@datadog/ui-apps-sdk";
 
-import "./widget.css";
-import "typeface-roboto";
-import "milligram";
 import { useEffect, useState } from "react";
 
-const client = init ({ debug: true });
+import { getRawAgentChangelog, parseRawAgentChangelog } from "../getAgentVersion";
 
 function Widget() {
-  const [name, setName] = useState("Datadog user");
-  const [metric, setMetric] = useState("system.cpu.idle");
-  const [broadcastClickCount, setBroadcastClickCount] = useState(0);
+  const [latestAgentVersion, setLatestAgentVersion] = useState("");
+  const [latestReleseDate, setLatestReleseDate] = useState("");
+
   const [result, setResult] = useState("");
   const [resultText, setResultText] = useState("");
 
   useEffect(() => {
-    client.getContext().then(c => {
-      setName(c.app.currentUser.handle);
-      setMetric(c.widget?.definition.options?.metric);
+    getRawAgentChangelog().then((res:JSON) => {
+      const { latestAgentVersion, latestReleseDate } = parseRawAgentChangelog(res);
+
+      setLatestAgentVersion(latestAgentVersion);
+      setLatestReleseDate(latestReleseDate);
     })
-
-    client.events.on(
-      UiAppEventType.DASHBOARD_CUSTOM_WIDGET_OPTIONS_CHANGE,
-      ({ metric }) => {
-        setMetric(metric);
-      }
-    );
-
-    client.events.onCustom('modal_button_click', setBroadcastClickCount)
+    
   }, []);
 
   const onOpenSidePanel = (args:any) => {  
-    /*client.sidePanel.open(
-      {
-        willCloseOnEsc: true,
-        width: "50%",
-        source: "panel",
-        key: "custom-side-panel",
-        hideCloseButton: false,
-      },
-      { metric }
-    )*/
-    console.log("hello");
-
     var xhr = new XMLHttpRequest()
     xhr.addEventListener('load', () => {
       // update the state of the component with the result here
@@ -59,6 +37,10 @@ function Widget() {
 
   return (
     <section style={{ padding: "10px" }}>
+      <h2>Agent Versions</h2>
+      <p>Latest Datadog Agent version: {latestAgentVersion}</p>
+      <p> Released on: {latestReleseDate}</p>
+
       <h2>Integration Versions</h2>
       <p>Here is a list of the latest integration versions.</p>
       <p><button className="button button-outline" onClick={onOpenSidePanel}>Show</button> </p>
