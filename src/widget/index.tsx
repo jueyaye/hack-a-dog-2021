@@ -11,6 +11,8 @@ function Widget() {
   const [name, setName] = useState("Datadog user");
   const [metric, setMetric] = useState("system.cpu.idle");
   const [broadcastClickCount, setBroadcastClickCount] = useState(0);
+  const [result, setResult] = useState("");
+  const [resultText, setResultText] = useState("");
 
   useEffect(() => {
     client.getContext().then(c => {
@@ -29,7 +31,7 @@ function Widget() {
   }, []);
 
   const onOpenSidePanel = (args:any) => {  
-    client.sidePanel.open(
+    /*client.sidePanel.open(
       {
         willCloseOnEsc: true,
         width: "50%",
@@ -38,16 +40,30 @@ function Widget() {
         hideCloseButton: false,
       },
       { metric }
-    )
+    )*/
+    console.log("hello");
+
+    var xhr = new XMLHttpRequest()
+    xhr.addEventListener('load', () => {
+      // update the state of the component with the result here
+      console.log(xhr.responseText)
+      setResult(xhr.responseText)
+      setResultText("Result")
+    })
+    xhr.open('GET', 'https://raw.githubusercontent.com/DataDog/integrations-core/master/AGENT_INTEGRATIONS.md')
+    // send the request
+    xhr.send()
   }
+
+
 
   return (
     <section style={{ padding: "10px" }}>
-      <h2>Hello {name} 👋</h2>
-      <p>Welcome to your first Datadog application.</p>
-      <p>Your favorite metric is: <strong>{metric}</strong></p>
-      <p>You can open a side panel programatically and pass to it your favorite metric by clicking <button className="button button-outline" onClick={onOpenSidePanel}>here</button> </p>
-      <p>The red button in the modal has been clicked: <strong>{broadcastClickCount}</strong> time(s)</p>
+      <h2>Integration Versions</h2>
+      <p>Here is a list of the latest integration versions.</p>
+      <p><button className="button button-outline" onClick={onOpenSidePanel}>Show</button> </p>
+      <h2>{resultText}</h2>
+      <p>{result}</p>
     </section>
   );
 }

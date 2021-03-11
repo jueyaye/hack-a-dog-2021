@@ -19,7 +19,8 @@ const getContent = () => {
       return <SidePanel />;
     }
     default: {
-      return <Controller />;
+      return <Widget />;
+      //Controller
     }
   }
 };
