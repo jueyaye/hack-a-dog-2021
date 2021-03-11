@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 
 import { getRawAgentChangelog, parseRawAgentChangelog } from "../getAgentVersion";
 
-import { getIntegrationChangelog, parseIntegrationChangelog, getIntegrationNames, parseIntegrationNames } from "../getIntegrationVersion";
+import { getIntegrationNames, parseIntegrationNames } from "../getIntegrationVersion";
+
+import { getRepos, filterRepos } from "../getAltRepos"
 
 function Widget() {
   const [latestAgentVersion, setLatestAgentVersion] = useState("");
@@ -21,18 +23,8 @@ function Widget() {
       setLatestReleseDate(latestReleseDate);
     })
 
-    /*getIntegrationChangelog("airflow").then((res:JSON) => {
-      const { latestIntegrationVersion, integrationReleaseDate } = parseIntegrationChangelog(res);
-      console.log(latestIntegrationVersion);
-      console.log(integrationReleaseDate);
-    })*/
-
     getIntegrationNames().then((res:JSON) => {
       const { listOfIntegrationNames, listOfIntegrationVersions } = parseIntegrationNames(res);
-      console.log('this is the list of integrations')
-      console.log(listOfIntegrationNames)
-      console.log("list of versions")
-      console.log(listOfIntegrationVersions)
       var listOfNamesInString = "";
       setResultHeading("Latest Integration Versions:")
       
@@ -41,22 +33,19 @@ function Widget() {
       }
       setResult(listOfNamesInString)
       setResultHeading2(listOfIntegrationNames)
-      
-
     })
-    
-  }, []);
-
-  const onOpenSidePanel = (args:any) => {  
-    var xhr = new XMLHttpRequest()
-    var completeResult = "";
-    var a = 0;
-
-
-  }
 
   var state = [1,2,3];
+    getRepos(1).then((res:any) => {
+      console.log(res)
 
+      filterRepos(res).then((repos:any) => {
+        console.log(repos)
+      })
+    })
+  }, []);
+
+  var state = [1,2,3]
   return (
     <section style={{ padding: "10px" }}>
       <h2>Agent Versions</h2>
@@ -64,7 +53,6 @@ function Widget() {
       <p> Released on: {latestReleseDate}</p>
       <h2>Integration Versions</h2>
       <p>Here is a list of the latest integration versions.</p>
-      <p><button className="button button-outline" onClick={onOpenSidePanel}>Show</button> </p>
       <h2>{resultHeading}</h2>
      <ul>
       {resultHeading2.map((item, i) => (
