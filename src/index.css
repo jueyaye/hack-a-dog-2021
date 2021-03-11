@@ -2,3 +2,12 @@ body {
   font-family: helvetica, arial, sans-serif;
   margin: 2em;
 }
+
+.tile {
+  height: 100px;
+  width: 200px;
+  border: solid 1px black;
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+}

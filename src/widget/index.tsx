@@ -35,7 +35,6 @@ function Widget() {
       setResultHeading2(listOfIntegrationNames)
     })
 
-  var state = [1,2,3];
     getRepos(1).then((res:any) => {
       console.log(res)
 
@@ -54,13 +53,24 @@ function Widget() {
       <h2>Integration Versions</h2>
       <p>Here is a list of the latest integration versions.</p>
       <h2>{resultHeading}</h2>
-     <ul>
+     
       {resultHeading2.map((item, i) => (
-            <li key={item}><a href="https://www.google.com" target="_blank">{item} {state[i]}</a></li>
-          ))}
-      </ul>
+            <div className='tile' key={item}>{item}</div>
+          ))
+      }
+      
+
     </section>
   );
 }
 
 export default Widget;
+
+/*
+<ul>
+      {resultHeading2.map((item, i) => (
+            <li key={item}><a href="https://www.google.com" target="_blank">{item} {state[i]}</a></li>
+          ))
+      }
+    </ul>
+    */
