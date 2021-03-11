@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 import { getRawAgentChangelog, parseRawAgentChangelog } from "../getAgentVersion";
 
+import { getIntegrationChangelog, parseIntegrationChangelog, getIntegrationNames } from "../getIntegrationVersion";
+
 function Widget() {
   const [latestAgentVersion, setLatestAgentVersion] = useState("");
   const [latestReleseDate, setLatestReleseDate] = useState("");
@@ -17,21 +19,26 @@ function Widget() {
       setLatestAgentVersion(latestAgentVersion);
       setLatestReleseDate(latestReleseDate);
     })
+
+    getIntegrationChangelog("airflow").then((res:JSON) => {
+      const { latestIntegrationVersion, integrationReleaseDate } = parseIntegrationChangelog(res);
+      console.log(latestIntegrationVersion);
+      console.log(integrationReleaseDate);
+      //console.log(res);
+      //setLatestAgentVersion(latestIntegrationVersion);
+      //setLatestReleseDate(latestReleseDate);
+    })
+
+    getIntegrationNames().then((res:JSON) => {
+      console.log(res);
+      //console.log(res);
+      //setLatestAgentVersion(latestIntegrationVersion);
+      //setLatestReleseDate(latestReleseDate);
+    })
     
   }, []);
 
   const onOpenSidePanel = (args:any) => {  
-    /*client.sidePanel.open(
-      {
-        willCloseOnEsc: true,
-        width: "50%",
-        source: "panel",
-        key: "custom-side-panel",
-        hideCloseButton: false,
-      },
-      { metric }
-    )*/
-
     var xhr = new XMLHttpRequest()
     var completeResult = "";
     var a = 0;
