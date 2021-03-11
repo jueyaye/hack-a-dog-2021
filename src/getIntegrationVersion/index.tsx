@@ -36,8 +36,43 @@ const parseIntegrationChangelog = (rawLogs:any) => {
     }
 }
 
+const parseIntegrationNames = (rawLogs:any) => {
+    const arrRawLogs = rawLogs.data.split(/\r?\n/)
+
+    var listOfIntegrationNames = new Array("");
+    var listOfIntegrationVersions = new Array("");
+    var versionNumber = "";
+    var extractString = "";
+    var integrationNameParts = [""];
+    var firstPart = "";
+    
+    for(var index = 0; index < arrRawLogs.length; index++) {
+        var integrationName = "";
+        extractString = arrRawLogs[index].split(';')[0]
+        firstPart = arrRawLogs[index].split('==')[0]
+
+        versionNumber = extractString.split('==')[1];
+        integrationNameParts = firstPart.split('-');
+        for (var i = 1; i < integrationNameParts.length; i++) {
+            if (i == 1) {
+                integrationName = integrationNameParts[i];
+            } else {
+                integrationName = integrationName + " " + integrationNameParts[i];
+            }
+        }
+        listOfIntegrationNames[index] = integrationName + " - " + versionNumber;
+    }
+
+
+    return {
+        listOfIntegrationNames,
+        listOfIntegrationVersions
+    }
+}
+
 export {
     getIntegrationChangelog,
     parseIntegrationChangelog,
-    getIntegrationNames
+    getIntegrationNames,
+    parseIntegrationNames
 }

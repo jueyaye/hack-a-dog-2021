@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { getRawAgentChangelog, parseRawAgentChangelog } from "../getAgentVersion";
 
-import { getIntegrationChangelog, parseIntegrationChangelog, getIntegrationNames } from "../getIntegrationVersion";
+import { getIntegrationChangelog, parseIntegrationChangelog, getIntegrationNames, parseIntegrationNames } from "../getIntegrationVersion";
 
 import { getRepos, filterRepos } from "../getAltRepos"
 
@@ -12,7 +12,8 @@ function Widget() {
   const [latestReleseDate, setLatestReleseDate] = useState("");
 
   const [result, setResult] = useState("");
-  const [resultText, setResultText] = useState("");
+  const [resultHeading, setResultHeading] = useState("");
+  const [resultHeading2, setResultHeading2] = useState([""]);
 
   useEffect(() => {
     getRawAgentChangelog().then((res:JSON) => {
@@ -22,25 +23,28 @@ function Widget() {
       setLatestReleseDate(latestReleseDate);
     })
 
-    // getIntegrationChangelog("airflow").then((res:JSON) => {
-    //   const { latestIntegrationVersion, integrationReleaseDate } = parseIntegrationChangelog(res);
-    //   console.log(latestIntegrationVersion);
-    //   console.log(integrationReleaseDate);
-    //   //console.log(res);
-    //   //setLatestAgentVersion(latestIntegrationVersion);
-    //   //setLatestReleseDate(latestReleseDate);
-    // })
+    getIntegrationChangelog("airflow").then((res:JSON) => {
+      const { latestIntegrationVersion, integrationReleaseDate } = parseIntegrationChangelog(res);
+      console.log(latestIntegrationVersion);
+      console.log(integrationReleaseDate);
+    })
 
-    // getIntegrationNames().then((res:JSON) => {
-    //   console.log(res);
-    //   //console.log(res);
-    //   //setLatestAgentVersion(latestIntegrationVersion);
-    //   //setLatestReleseDate(latestReleseDate);
-    // })
+    getIntegrationNames().then((res:JSON) => {
+      const { listOfIntegrationNames, listOfIntegrationVersions } = parseIntegrationNames(res);
+      console.log('this is the list of integrations')
+      console.log(listOfIntegrationNames)
+      console.log("list of versions")
+      console.log(listOfIntegrationVersions)
+      var listOfNamesInString = "";
+      setResultHeading("Latest Integration Versions:")
+      
+      for (var i = 0; i < listOfIntegrationNames.length; i++) {
+        listOfNamesInString += listOfIntegrationNames[i] + " " + listOfIntegrationVersions[i] + "\n";
+      }
+      setResult(listOfNamesInString)
+      setResultHeading2(listOfIntegrationNames)
+      
 
-    getRepos(1).then((res:unknown) => {
-      filterRepos(res).then((repos:unknown) => {
-      })
     })
     
   }, []);
@@ -50,11 +54,13 @@ function Widget() {
       <h2>Agent Versions</h2>
       <p>Latest Datadog Agent version: {latestAgentVersion}</p>
       <p> Released on: {latestReleseDate}</p>
-
       <h2>Integration Versions</h2>
       <p>Here is a list of the latest integration versions.</p>
-      <h2>{resultText}</h2>
-      <p>{result}</p>
+      <h2>{resultHeading}</h2>
+     
+      {resultHeading2.map(item => (
+            <li key={item}>{item}</li>
+          ))}
     </section>
   );
 }
