@@ -59,33 +59,37 @@ const filterRepos = (repos:any) => {
             }
     
             await Promise.all(repos.map(async (r:any) => {
-                if (r.name.match(/^dd-agent$/gm) || r.name.match(/^datadog-agent$/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.agent.push(r)
-                }
-                else if (r.name.match(/(.+)-datadog$/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.configManager.push(r)
-                }
-                else if (r.name.match(/^dd-trace-*/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.tracer.push(r)
-                }
-                else if (r.name.match(/^datadog-lambda-*/gm) || r.name.match(/^datadog-serverless-functions$/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.aws.push(r)
-                }
-                else if (r.name.match(/^helm-charts$/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.kube.push(r)
-                }
-                else if (r.name.match(/^dd-sdk-*/gm) || r.name.match(/^browser-sdk$/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.rum.push(r)
-                }
-                else if (r.name.match(/^datadog-api-client-*/gm)) {
-                    r.release = await getReleses(r)
-                    filteredResult.api.push(r)
+                try {
+                    if (r.name.match(/^dd-agent$/gm) || r.name.match(/^datadog-agent$/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.agent.push(r)
+                    }
+                    else if (r.name.match(/(.+)-datadog$/gm) || r.name.match(/(.+)-datadog-agent$/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.configManager.push(r)
+                    }
+                    else if (r.name.match(/^dd-trace-*/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.tracer.push(r)
+                    }
+                    else if (r.name.match(/^datadog-lambda-*/gm) || r.name.match(/^datadog-serverless-functions$/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.aws.push(r)
+                    }
+                    else if (r.name.match(/^helm-charts$/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.kube.push(r)
+                    }
+                    else if (r.name.match(/^dd-sdk-*/gm) || r.name.match(/^browser-sdk$/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.rum.push(r)
+                    }
+                    else if (r.name.match(/^datadog-api-client-*/gm)) {
+                        r.release = await getReleses(r)
+                        filteredResult.api.push(r)
+                    }
+                } catch(err:any) {
+                    // don't add a repo with no latest release...
                 }
             }))
     
