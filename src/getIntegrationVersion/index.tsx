@@ -46,7 +46,8 @@ const parseIntegrationNames = (rawLogs:any) => {
     var integrationNameParts = [""];
     var firstPart = "";
     
-    for(var index = 0; index < arrRawLogs.length; index++) {
+    //-1 to remove the odd undefined index in the array
+    for(var index = 0; index < arrRawLogs.length-1; index++) {
         var integrationName = "";
         extractString = arrRawLogs[index].split(';')[0]
         firstPart = arrRawLogs[index].split('==')[0]

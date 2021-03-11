@@ -21,11 +21,11 @@ function Widget() {
       setLatestReleseDate(latestReleseDate);
     })
 
-    getIntegrationChangelog("airflow").then((res:JSON) => {
+    /*getIntegrationChangelog("airflow").then((res:JSON) => {
       const { latestIntegrationVersion, integrationReleaseDate } = parseIntegrationChangelog(res);
       console.log(latestIntegrationVersion);
       console.log(integrationReleaseDate);
-    })
+    })*/
 
     getIntegrationNames().then((res:JSON) => {
       const { listOfIntegrationNames, listOfIntegrationVersions } = parseIntegrationNames(res);
@@ -55,7 +55,7 @@ function Widget() {
 
   }
 
-
+  var state = [1,2,3];
 
   return (
     <section style={{ padding: "10px" }}>
@@ -66,10 +66,11 @@ function Widget() {
       <p>Here is a list of the latest integration versions.</p>
       <p><button className="button button-outline" onClick={onOpenSidePanel}>Show</button> </p>
       <h2>{resultHeading}</h2>
-     
-      {resultHeading2.map(item => (
-            <li key={item}>{item}</li>
+     <ul>
+      {resultHeading2.map((item, i) => (
+            <li key={item}><a href="https://www.google.com" target="_blank">{item} {state[i]}</a></li>
           ))}
+      </ul>
     </section>
   );
 }
