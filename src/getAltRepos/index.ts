@@ -38,7 +38,7 @@ const getReleses = async (repo:any) => {
         try {
             let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases`)
 
-            resolve(releases)
+            resolve(releases.data)
         } catch(error:any) {
             reject(error)
         }
