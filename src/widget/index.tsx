@@ -41,18 +41,69 @@ function Widget() {
       },
       { metric }
     )*/
-    console.log("hello");
 
     var xhr = new XMLHttpRequest()
-    xhr.addEventListener('load', () => {
-      // update the state of the component with the result here
-      console.log(xhr.responseText)
-      setResult(xhr.responseText)
-      setResultText("Result")
-    })
-    xhr.open('GET', 'https://raw.githubusercontent.com/DataDog/integrations-core/master/AGENT_INTEGRATIONS.md')
-    // send the request
-    xhr.send()
+    var completeResult = "";
+    var a = 0;
+    
+    var listOfIntegrations = ["airflow", "activemq", "apache"];
+    var baseUrl = "https://raw.githubusercontent.com/DataDog/integrations-core/master/";
+    var completeUrl = "";
+    for (var i = 0; i < listOfIntegrations.length; i++) {
+      completeUrl = baseUrl + listOfIntegrations[i] + "/CHANGELOG.md";
+      /*xhr.addEventListener('load', () => {
+        // update the state of the component with the result here
+        //console.log(xhr.responseText)
+        console.log("triggered " + a++)
+        completeResult = completeResult + xhr.responseText;
+        
+        
+        
+      })
+      xhr.open('GET', completeUrl)
+      // send the request
+      xhr.send()*/
+      setResultText("Result:")
+      fetch(completeUrl).then(res => {
+        console.log(res);
+        //setResult(res)
+      }).then((data) => {
+        console.log(data);
+          //
+      })
+
+      fetch(completeUrl).then(response => 
+        response.json().then(data => ({
+            data: data,
+            status: response.status
+        })
+      ).then(res => {
+          console.log(res.status, res.data.title)
+      }));
+
+
+      Promise.all([0, 1].map((index) => {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest()
+          xhr.open("GET", completeUrl, true)
+          xhr.onload = function() {
+            if (xhr.readyState === 4) {
+              if(xhr.status === 200) {
+                resolve(JSON.parse(xhr.responseText))
+              } else {
+                reject(xhr.statusText)
+              }
+          }
+        }
+        })
+      })).then((json_objs) => {
+        console.log(json_objs)
+      }).catch(err => console.error(err))
+    }
+    
+    
+    
+    
   }
 
 
