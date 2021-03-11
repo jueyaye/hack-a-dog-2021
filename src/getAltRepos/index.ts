@@ -36,7 +36,7 @@ const getRepos = (page:number) => {
 const getReleses = async (repo:any) => {
     return new Promise(async (resolve:any, reject:any) => {
         try {
-            let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases`)
+            let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)
 
             resolve(releases.data)
         } catch(error:any) {
