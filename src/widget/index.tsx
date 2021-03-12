@@ -35,8 +35,13 @@ function Widget() {
 
   const [favourites, setFavourites] = useState([] as {name:string, version:string}[]);
 
-  const [result, setResult] = useState([] as {name:string, version:string}[]);
+  const [listOfAgentIntegrations, setListOfAgentIntegrations] = useState([] as {name:string, version:string}[]);
   const [listOfTracers, setListOfTracers] = useState([] as {name:string, version:string}[]);
+  const [listOfRUMSDKs, setListOfRUMSDKs] = useState([] as {name:string, version:string}[]);
+  const [listOfAWSPackages, setListOfAWSPackages] = useState([] as {name:string, version:string}[]);
+  const [listOfKubePackages, setListOfKubePackages] = useState([] as {name:string, version:string}[]);
+  const [listOfAPIClients, setListOfAPIClients] = useState([] as {name:string, version:string}[]);
+
 
   useEffect(() => {
     try {
@@ -58,23 +63,63 @@ function Widget() {
     getIntegrationNames().then((res:JSON) => {
       const { listOfIntegrationObjs } = parseIntegrationNames(res);
 
-      setResult(listOfIntegrationObjs)
+      setListOfAgentIntegrations(listOfIntegrationObjs)
 
     })
 
     getRepos(1).then((res:any) => {
       filterRepos(res).then((repos:any) => {
-        var listOfTracers = new Array()
-        console.log("complete repo: ")
-        console.log(repos.tracer)
+        // override state with local variable
+        let listOfTracers = new Array()
+        let listOfRUMSDKs = new Array()
+        let listOfAWSPackages = new Array()
+        let listOfKubePackages = new Array()
+        let listOfAPIClients = new Array()
+
+        //tacers
         for (var i = 0; i < repos.tracer.length; i++) {
           if (repos.tracer[i].release != null) {
             if (repos.tracer[i].release.tag_name != null)
               listOfTracers.push({name: repos.tracer[i].name, version: repos.tracer[i].release.tag_name})
           }
         }
-        //console.log(listOfTracers)
         setListOfTracers(listOfTracers)
+
+        //rum sdk
+        for (var i = 0; i < repos.rum.length; i++) {
+          if (repos.rum[i].release != null) {
+            if (repos.rum[i].release.tag_name != null)
+              listOfRUMSDKs.push({name: repos.rum[i].name, version: repos.rum[i].release.tag_name})
+          }
+        }
+        setListOfRUMSDKs(listOfRUMSDKs)
+
+        //aws packages
+        for (var i = 0; i < repos.aws.length; i++) {
+          if (repos.aws[i].release != null) {
+            if (repos.aws[i].release.tag_name != null)
+              listOfAWSPackages.push({name: repos.aws[i].name, version: repos.aws[i].release.tag_name})
+          }
+        }
+        setListOfAWSPackages(listOfAWSPackages)
+
+        //kube packages
+        for (var i = 0; i < repos.kube.length; i++) {
+          if (repos.kube[i].release != null) {
+            if (repos.kube[i].release.tag_name != null)
+            listOfKubePackages.push({name: repos.kube[i].name, version: repos.kube[i].release.tag_name})
+          }
+        }
+        setListOfKubePackages(listOfKubePackages)
+
+        //API clients
+        for (var i = 0; i < repos.api.length; i++) {
+          if (repos.api[i].release != null) {
+            if (repos.api[i].release.tag_name != null)
+              listOfAPIClients.push({name: repos.api[i].name, version: repos.api[i].release.tag_name})
+          }
+        }
+        setListOfAPIClients(listOfAPIClients)
       })
     })
   }, []);
@@ -98,13 +143,19 @@ function Widget() {
     <section style={{ padding: "10px" }}>
       <h2>Favourites</h2>
       <p>Search and save your most used Datadog services</p>
-      <SearchBar options={[...result]} handleFavouriteSelected={handleFavouriteSelected}/>
+      <SearchBar options={[
+        {name: 'Datadog Agent', version: latestAgentVersion}, ...listOfAgentIntegrations, 
+        ...listOfTracers, 
+        ...listOfAWSPackages,
+        ...listOfRUMSDKs,
+        ...listOfKubePackages,
+        ...listOfAPIClients
+      ]} handleFavouriteSelected={handleFavouriteSelected}/>
       { favourites.map((item, i) => (
         <VersionCard item={item} hasRemove={true} index={i} handleFavouriteRemoved={handleFavouriteRemoved}/>
       )) }
       <h2>Agent Versions</h2>
-      <p>Latest Datadog Agent version: {latestAgentVersion}</p>
-      <p> Released on: {latestReleseDate}</p>
+      <VersionCard item={{name: 'Datadog Agent', version: latestAgentVersion}} hasRemove={false}/>
       <h2>Integration Versions</h2>
       <p>Here is a list of the latest integration versions.</p>
       <div className={classes.root}>
@@ -117,20 +168,43 @@ function Widget() {
           <Typography className={classes.heading}>Accordion 1</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          { result.map((item, i) => (
+          { listOfAgentIntegrations.map((item, i) => (
             <VersionCard item={item} hasRemove={false}/>
           )) }
         </AccordionDetails>
       </Accordion>  
     </div>
 
-      
+    <h2>Tracer Versions</h2>
+    <p>Here is a list of the latest Tracer versions.</p>
+    { listOfTracers.map((item, i) => (
+      <VersionCard item={item} hasRemove={false}/>
+    )) }
 
-      <h2>Tracer Versions</h2>
-      <p>Here is a list of the latest Tracer versions.</p>
-      { listOfTracers.map((item, i) => (
-        <VersionCard item={item} hasRemove={false}/>
-      )) }
+    <h2>RUM SDK Versions</h2>
+    <p>Here is a list of the latest RUM SDK versions.</p>
+    { listOfRUMSDKs.map((item, i) => (
+      <VersionCard item={item} hasRemove={false}/>
+    )) }
+
+    <h2>AWS Package Versions</h2>
+    <p>Here is a list of the latest AWS Package versions.</p>
+    { listOfAWSPackages.map((item, i) => (
+      <VersionCard item={item} hasRemove={false}/>
+    )) }
+
+    <h2>Kube Package Versions</h2>
+    <p>Here is a list of the latest Kube package versions.</p>
+    { listOfKubePackages.map((item, i) => (
+      <VersionCard item={item} hasRemove={false}/>
+    )) }
+
+    <h2>API Client Package Versions</h2>
+    <p>Here is a list of the latest API Client versions.</p>
+    { listOfAPIClients.map((item, i) => (
+      <VersionCard item={item} hasRemove={false}/>
+    )) }
+
     </section>
     
   );
