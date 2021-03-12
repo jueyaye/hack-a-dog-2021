@@ -149,7 +149,8 @@ function Widget() {
       <h2>Favourites</h2>
       <p>Search and save your most used Datadog services</p>
       <SearchBar options={[
-        ...listOfAgents, 
+        ...listOfAgents,
+        ...listOfAgentIntegrations, 
         ...listOfTracers, 
         ...listOfAWSPackages,
         ...listOfRUMSDKs,
@@ -170,7 +171,9 @@ function Widget() {
           <Typography className={classes.heading}>Click here...</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.root}>
-          <VersionCard item={{name: 'Datadog Agent', version: latestAgentVersion}} hasRemove={false}/>
+          { listOfAgents.map((item, i) => (
+            <VersionCard item={item} hasRemove={false}/>
+          )) }
         </AccordionDetails>
       </Accordion> 
       
