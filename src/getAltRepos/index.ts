@@ -38,7 +38,7 @@ const getRepos = (page:number) => {
                 resolve(value)
               });
         } catch(error:any) {
-            reject(error)
+            // reject(error)
         }
     })
 }
@@ -58,7 +58,7 @@ const getReleses = async (repo:any) => {
                 resolve(value)
             });
         } catch(error:any) {
-            reject(error)
+            // reject(error)
         }
     })
 }
@@ -110,10 +110,12 @@ const filterRepos = (repos:any) => {
                     // don't add a repo with no latest release...
                 }
             }))
+
+            console.log(filteredResult)
     
             resolve(filteredResult)
         } catch(error:any) {
-            reject(error)
+            // reject(error)
         }
     })
 }
