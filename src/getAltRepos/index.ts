@@ -21,6 +21,7 @@ const getRepos = (page:number) => {
         try {
             localforage.getItem(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, async (err:string, value:JSON) => {
                 if (err || value == null) {
+                    console.log("error getting data from cache")
                     let res = await api.get(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, { 
                         params: {
                             type: 'public',
@@ -46,10 +47,13 @@ const getReleses = async (repo:any) => {
     return new Promise(async (resolve:any, reject:any) => {
         try {
             localforage.getItem(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`, async (err:string, value:JSON) => {
-                if (err || null) {
-                    let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)
-
-                    resolve(releases.data)
+                if (err || value == null) {
+                    try {
+                        let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)                
+                        resolve(releases.data)
+                    } catch(error:any) {
+                        console.log("issue getting releases")
+                    }
                 }
                 resolve(value)
             });
