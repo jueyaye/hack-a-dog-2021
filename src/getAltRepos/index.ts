@@ -1,10 +1,15 @@
 const axios = require('axios')
+const localforage = require('localforage')
+
 const { setupCache } = require('axios-cache-adapter')
 
 const GITHUB_BASE_URL = 'https://api.github.com'
 
 const cache = setupCache({
-    maxAge: 15 * 60 * 1000
+    maxAge: 15 * 60 * 1000,
+    store: localforage.createInstance({
+        name: "datadog-repos"
+      })
 })
 const api = axios.create({
     adapter: cache.adapter
