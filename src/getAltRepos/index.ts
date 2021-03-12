@@ -37,7 +37,7 @@ const getRepos = (page:number) => {
                 resolve(value)
               });
         } catch(error:any) {
-            reject(error)
+            // reject(error)
         }
     })
 }
@@ -46,7 +46,7 @@ const getReleses = async (repo:any) => {
     return new Promise(async (resolve:any, reject:any) => {
         try {
             localforage.getItem(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`, async (err:string, value:JSON) => {
-                if (err || null) {
+                if (err || value == null) {
                     let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)
 
                     resolve(releases.data)
@@ -54,7 +54,7 @@ const getReleses = async (repo:any) => {
                 resolve(value)
             });
         } catch(error:any) {
-            reject(error)
+            // reject(error)
         }
     })
 }
@@ -106,10 +106,12 @@ const filterRepos = (repos:any) => {
                     // don't add a repo with no latest release...
                 }
             }))
+
+            console.log(filteredResult)
     
             resolve(filteredResult)
         } catch(error:any) {
-            reject(error)
+            // reject(error)
         }
     })
 }

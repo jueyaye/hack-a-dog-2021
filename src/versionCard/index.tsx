@@ -1,10 +1,11 @@
 //Material UI Framework for Card
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles({
   root: {
@@ -30,15 +31,17 @@ function VersionCard(props:any) {
 
   return (
     <Card className={classes.root}>
+      <CardHeader
+        action={ (props.hasRemove) ?
+            <IconButton aria-label="settings" onClick={() => props.handleFavouriteRemoved(props.index)}>
+              <CancelIcon />
+            </IconButton>
+          : null
+        }
+        title={props.item.name}
+        subheader={props.item.version}
+      />
       <CardContent>
-        <Typography className="none" color="textSecondary" gutterBottom>
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {props.item.name}
-        </Typography>
-        <Typography className="none" color="textSecondary">
-          {props.item.version}
-        </Typography>
         <Typography variant="body2" component="p">
           Integration description
         </Typography>
