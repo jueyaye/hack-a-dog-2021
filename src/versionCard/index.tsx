@@ -11,7 +11,8 @@ const useStyles = makeStyles({
   root: {
     minWidth: 275,
     display: 'inline-block',
-    margin: 10
+    margin: 10,
+    "text-transform": 'capitalize'
   },
   bullet: {
     display: 'inline-block',
@@ -42,6 +43,14 @@ function VersionCard(props:any) {
         subheader={props.item.version}
       />
       <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+        </Typography>
+        <Typography variant="h5" component="h2">
+          {props.item.name}
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          {props.item.version}
+        </Typography>
         <Typography variant="body2" component="p">
           Integration description
         </Typography>
