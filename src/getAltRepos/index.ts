@@ -9,7 +9,8 @@ const cache = setupCache({
     maxAge: 1440 * 60 * 1000, // 24 hours
     store: localforage.createInstance({
         name: "datadog-repos"
-      })
+    }),
+    exclude: { query: false }
 })
 const api = axios.create({
     adapter: cache.adapter
