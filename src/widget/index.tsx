@@ -32,11 +32,9 @@ const useStyles = makeStyles((theme) => ({
 function Widget() {
   const classes = useStyles();
 
-  const [latestAgentVersion, setLatestAgentVersion] = useState("");
-  const [latestReleseDate, setLatestReleseDate] = useState("");
-
   const [favourites, setFavourites] = useState([] as {name:string, version:string}[]);
 
+  const [listOfAgents, setListOfAgents] = useState([] as {name:string, version:string}[]);
   const [listOfAgentIntegrations, setListOfAgentIntegrations] = useState([] as {name:string, version:string}[]);
   const [listOfTracers, setListOfTracers] = useState([] as {name:string, version:string}[]);
   const [listOfRUMSDKs, setListOfRUMSDKs] = useState([] as {name:string, version:string}[]);
@@ -54,13 +52,9 @@ function Widget() {
       console.log('No favourites saved...')
     }
 
-
-    getRawAgentChangelog().then((res:JSON) => {
-      const { latestAgentVersion, latestReleseDate } = parseRawAgentChangelog(res);
-
-      setLatestAgentVersion(latestAgentVersion);
-      setLatestReleseDate(latestReleseDate);
-    })
+    // getRawAgentChangelog().then((res:JSON) => {
+    //   const { latestAgentVersion, latestReleseDate } = parseRawAgentChangelog(res);
+    // })
 
     getIntegrationNames().then((res:JSON) => {
       const { listOfIntegrationObjs } = parseIntegrationNames(res);
@@ -72,11 +66,20 @@ function Widget() {
     getRepos(1).then((res:any) => {
       filterRepos(res).then((repos:any) => {
         // override state with local variable
+        let listOfAgents = new Array()
         let listOfTracers = new Array()
         let listOfRUMSDKs = new Array()
         let listOfAWSPackages = new Array()
         let listOfKubePackages = new Array()
         let listOfAPIClients = new Array()
+
+        for (var i = 0; i < repos.agent.length; i++) {
+          if (repos.agent[i].release != null) {
+            if (repos.agent[i].release.tag_name != null)
+              listOfAgents.push({name: repos.agent[i].name, version: repos.agent[i].release.tag_name})
+          }
+        }
+        setListOfAgents(listOfAgents)
 
         //tacers
         for (var i = 0; i < repos.tracer.length; i++) {
@@ -146,7 +149,8 @@ function Widget() {
       <h2>Favourites</h2>
       <p>Search and save your most used Datadog services</p>
       <SearchBar options={[
-        {name: 'Datadog Agent', version: latestAgentVersion}, ...listOfAgentIntegrations, 
+        ...listOfAgents,
+        ...listOfAgentIntegrations, 
         ...listOfTracers, 
         ...listOfAWSPackages,
         ...listOfRUMSDKs,
@@ -167,7 +171,9 @@ function Widget() {
           <Typography className={classes.heading}>Click here...</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.root}>
-          <VersionCard item={{name: 'Datadog Agent', version: latestAgentVersion}} hasRemove={false}/>
+          { listOfAgents.map((item, i) => (
+            <VersionCard item={item} hasRemove={false}/>
+          )) }
         </AccordionDetails>
       </Accordion> 
       
