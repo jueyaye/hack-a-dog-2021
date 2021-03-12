@@ -29,13 +29,13 @@ function Widget() {
 
     })
 
-    // getRepos(1).then((res:any) => {
-    //   console.log(res)
+    getRepos(1).then((res:any) => {
+      console.log(res)
 
-    //   filterRepos(res).then((repos:any) => {
-    //     console.log(repos)
-    //   })
-    // })
+      filterRepos(res).then((repos:any) => {
+        console.log(repos)
+      })
+    })
 
   
   }, []);

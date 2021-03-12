@@ -17,21 +17,25 @@ const api = axios.create({
 
 const getRepos = (page:number) => {
     let repos: any[] = []
-
     return new Promise(async (resolve:any, reject:any) => {
         try {
-            let res = await api.get(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, { 
-                params: {
-                    type: 'public',
-                    per_page: 100,
-                    page: page
+            localforage.getItem(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, async (err:string, value:JSON) => {
+                if (err || value == null) {
+                    let res = await api.get(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, { 
+                        params: {
+                            type: 'public',
+                            per_page: 100,
+                            page: page
+                        }
+                    })
+                    repos = repos.concat(res.data)
+        
+                    if (res.data.length > 99) repos = repos.concat(await getRepos(page + 1))
+        
+                    resolve(repos)
                 }
-            })
-            repos = repos.concat(res.data)
-
-            if (res.data.length > 99) repos = repos.concat(await getRepos(page + 1))
-
-            resolve(repos)
+                resolve(value)
+              });
         } catch(error:any) {
             reject(error)
         }
@@ -41,9 +45,14 @@ const getRepos = (page:number) => {
 const getReleses = async (repo:any) => {
     return new Promise(async (resolve:any, reject:any) => {
         try {
-            let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)
+            localforage.getItem(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`, async (err:string, value:JSON) => {
+                if (err || null) {
+                    let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)
 
-            resolve(releases.data)
+                    resolve(releases.data)
+                }
+                resolve(value)
+            });
         } catch(error:any) {
             reject(error)
         }
