@@ -38,9 +38,7 @@ const parseIntegrationChangelog = (rawLogs:any) => {
 
 const parseIntegrationNames = (rawLogs:any) => {
     const arrRawLogs = rawLogs.data.split(/\r?\n/)
-
-    var listOfIntegrationNames = new Array("");
-    var listOfIntegrationVersions = new Array("");
+    var listOfIntegrationObjs = [];
     var versionNumber = "";
     var extractString = "";
     var integrationNameParts = [""];
@@ -61,13 +59,12 @@ const parseIntegrationNames = (rawLogs:any) => {
                 integrationName = integrationName + " " + integrationNameParts[i];
             }
         }
-        listOfIntegrationNames[index] = integrationName + " - " + versionNumber;
+        listOfIntegrationObjs.push({name: integrationName, version: versionNumber})
     }
 
 
     return {
-        listOfIntegrationNames,
-        listOfIntegrationVersions
+        listOfIntegrationObjs
     }
 }
 

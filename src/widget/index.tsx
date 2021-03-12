@@ -13,7 +13,7 @@ function Widget() {
 
   const [result, setResult] = useState("");
   const [resultHeading, setResultHeading] = useState("");
-  const [resultHeading2, setResultHeading2] = useState([""]);
+  const [resultHeading2, setResultHeading2] = useState([] as {name:string, version:string}[]);
 
   useEffect(() => {
     getRawAgentChangelog().then((res:JSON) => {
@@ -24,15 +24,13 @@ function Widget() {
     })
 
     getIntegrationNames().then((res:JSON) => {
-      const { listOfIntegrationNames, listOfIntegrationVersions } = parseIntegrationNames(res);
+      const { listOfIntegrationObjs } = parseIntegrationNames(res);
       var listOfNamesInString = "";
       setResultHeading("Latest Integration Versions:")
-      
-      for (var i = 0; i < listOfIntegrationNames.length; i++) {
-        listOfNamesInString += listOfIntegrationNames[i] + " " + listOfIntegrationVersions[i] + "\n";
-      }
+
       setResult(listOfNamesInString)
-      setResultHeading2(listOfIntegrationNames)
+      setResultHeading2(listOfIntegrationObjs)
+
     })
 
     getRepos(1).then((res:any) => {
@@ -44,7 +42,7 @@ function Widget() {
     })
   }, []);
 
-  var state = [1,2,3]
+  var state = [{"name":"test1"},{"name":"test2"}];
   return (
     <section style={{ padding: "10px" }}>
       <h2>Agent Versions</h2>
@@ -52,25 +50,14 @@ function Widget() {
       <p> Released on: {latestReleseDate}</p>
       <h2>Integration Versions</h2>
       <p>Here is a list of the latest integration versions.</p>
-      <h2>{resultHeading}</h2>
      
       {resultHeading2.map((item, i) => (
-            <div className='tile' key={item}>{item}</div>
+            <div className='tile' key={i}>{item.name} - {item.version}</div>
           ))
       }
-      
 
     </section>
   );
 }
 
 export default Widget;
-
-/*
-<ul>
-      {resultHeading2.map((item, i) => (
-            <li key={item}><a href="https://www.google.com" target="_blank">{item} {state[i]}</a></li>
-          ))
-      }
-    </ul>
-    */
