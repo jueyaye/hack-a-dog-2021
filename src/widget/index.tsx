@@ -160,17 +160,30 @@ function Widget() {
         <VersionCard item={item} hasRemove={true} index={i} handleFavouriteRemoved={handleFavouriteRemoved}/>
       )) }
       <h2>Agent Versions</h2>
-      <VersionCard item={{name: 'Datadog Agent', version: latestAgentVersion}} hasRemove={false}/>
-      <h2>Integration Versions</h2>
-      <p>Here is a list of the latest integration versions.</p>
-      <div className={classes.root}>
+      <p>Here is a list of the latest Agent versions.</p>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>Integrations</Typography>
+          <Typography className={classes.heading}>Click here...</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.root}>
+          <VersionCard item={{name: 'Datadog Agent', version: latestAgentVersion}} hasRemove={false}/>
+        </AccordionDetails>
+      </Accordion> 
+      
+      <h2>Integration Versions</h2>
+      <p>Here is a list of the latest Integration versions.</p>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Click here...</Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.root}>
           { listOfAgentIntegrations.map((item, i) => (
@@ -178,37 +191,101 @@ function Widget() {
           )) }
         </AccordionDetails>
       </Accordion>  
-    </div>
+  
 
     <h2>Tracer Versions</h2>
     <p>Here is a list of the latest Tracer versions.</p>
-    { listOfTracers.map((item, i) => (
-      <VersionCard item={item} hasRemove={false}/>
-    )) }
+    
+    <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Click here...</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.root}>
+        { listOfTracers.map((item, i) => (
+          <VersionCard item={item} hasRemove={false}/>
+        )) }
+        </AccordionDetails>
+    </Accordion>  
 
     <h2>RUM SDK Versions</h2>
     <p>Here is a list of the latest RUM SDK versions.</p>
-    { listOfRUMSDKs.map((item, i) => (
-      <VersionCard item={item} hasRemove={false}/>
-    )) }
+    
+
+    <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Click here...</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.root}>
+        { listOfRUMSDKs.map((item, i) => (
+          <VersionCard item={item} hasRemove={false}/>
+        )) }
+        </AccordionDetails>
+      </Accordion>  
 
     <h2>AWS Package Versions</h2>
     <p>Here is a list of the latest AWS Package versions.</p>
-    { listOfAWSPackages.map((item, i) => (
-      <VersionCard item={item} hasRemove={false}/>
-    )) }
+    
+
+    <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Click here...</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.root}>
+        { listOfAWSPackages.map((item, i) => (
+          <VersionCard item={item} hasRemove={false}/>
+        )) }
+        </AccordionDetails>
+    </Accordion>  
 
     <h2>Kube Package Versions</h2>
     <p>Here is a list of the latest Kube package versions.</p>
-    { listOfKubePackages.map((item, i) => (
+    
+
+<Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Click here...</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.root}>
+        { listOfKubePackages.map((item, i) => (
       <VersionCard item={item} hasRemove={false}/>
     )) }
+        </AccordionDetails>
+      </Accordion>  
 
     <h2>API Client Package Versions</h2>
     <p>Here is a list of the latest API Client versions.</p>
-    { listOfAPIClients.map((item, i) => (
-      <VersionCard item={item} hasRemove={false}/>
-    )) }
+    
+
+    <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Click here...</Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.root}>
+        { listOfAPIClients.map((item, i) => (
+          <VersionCard item={item} hasRemove={false}/>
+        )) }
+        </AccordionDetails>
+      </Accordion>  
 
     </section>
     
