@@ -1,3 +1,5 @@
+import { init, UiAppEventType } from "@datadog/ui-apps-sdk";
+
 import { useEffect, useState } from "react";
 
 // helpers
@@ -27,13 +29,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
+const client = init ({ debug: true });
 
 function Widget() {
+  const [name, setName] = useState("Datadog user");
+  const [metric, setMetric] = useState("system.cpu.idle");
+  const [broadcastClickCount, setBroadcastClickCount] = useState(0);
+
   const classes = useStyles();
 
   const [favourites, setFavourites] = useState([] as {name:string, version:string}[]);
 
+  const [latestAgentVersion, setLatestAgentVersion] = useState("");
+  const [latestReleseDate, setLatestReleseDate] = useState("");
   const [listOfAgents, setListOfAgents] = useState([] as {name:string, version:string}[]);
   const [listOfAgentIntegrations, setListOfAgentIntegrations] = useState([] as {name:string, version:string}[]);
   const [listOfTracers, setListOfTracers] = useState([] as {name:string, version:string}[]);
@@ -42,8 +50,21 @@ function Widget() {
   const [listOfKubePackages, setListOfKubePackages] = useState([] as {name:string, version:string}[]);
   const [listOfAPIClients, setListOfAPIClients] = useState([] as {name:string, version:string}[]);
 
-
   useEffect(() => {
+    client.getContext().then(c => {
+      setName(c.app.currentUser.handle);
+      setMetric(c.widget?.definition.options?.metric);
+    })
+
+    client.events.on(
+      UiAppEventType.DASHBOARD_CUSTOM_WIDGET_OPTIONS_CHANGE,
+      ({ metric }) => {
+        setMetric(metric);
+      }
+    );
+
+    client.events.onCustom('modal_button_click', setBroadcastClickCount)
+
     try {
       const stashedFavourites = localStorage.getItem('favourites');
 
@@ -52,9 +73,11 @@ function Widget() {
       console.log('No favourites saved...')
     }
 
-    // getRawAgentChangelog().then((res:JSON) => {
-    //   const { latestAgentVersion, latestReleseDate } = parseRawAgentChangelog(res);
-    // })
+    getRawAgentChangelog().then((res:JSON) => {
+      const { latestAgentVersion, latestReleseDate } = parseRawAgentChangelog(res);
+      setLatestAgentVersion(latestAgentVersion);
+      setLatestReleseDate(latestReleseDate);
+    })
 
     getIntegrationNames().then((res:JSON) => {
       const { listOfIntegrationObjs } = parseIntegrationNames(res);
@@ -80,6 +103,7 @@ function Widget() {
           }
         }
         setListOfAgents(listOfAgents)
+
 
         //tacers
         for (var i = 0; i < repos.tracer.length; i++) {
@@ -129,6 +153,19 @@ function Widget() {
     })
   }, []);
 
+  const onOpenSidePanel = (args:any) => {  
+    client.sidePanel.open(
+      {
+        willCloseOnEsc: true,
+        width: "50%",
+        source: "panel",
+        key: "custom-side-panel",
+        hideCloseButton: false,
+      },
+      { metric }
+    )
+  }
+
   const handleFavouriteSelected = (option:any) => {
     const temp = favourites.concat(option);
 
@@ -149,6 +186,7 @@ function Widget() {
       <h2>Favourites</h2>
       <p>Search and save your most used Datadog services</p>
       <SearchBar options={[
+        {name: 'Datadog Agent', version: latestAgentVersion},
         ...listOfAgents,
         ...listOfAgentIntegrations, 
         ...listOfTracers, 
@@ -174,6 +212,7 @@ function Widget() {
           { listOfAgents.map((item, i) => (
             <VersionCard item={item} hasRemove={false}/>
           )) }
+          <VersionCard item={{name: 'Datadog Agent', version: latestAgentVersion}} hasRemove={false}/>
         </AccordionDetails>
       </Accordion> 
       
@@ -291,7 +330,6 @@ function Widget() {
       </Accordion>  
 
     </section>
-    
   );
 }
 

@@ -22,19 +22,22 @@ const getRepos = (page:number) => {
         try {
             localforage.getItem(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, async (err:string, value:JSON) => {
                 if (err || value == null) {
-                    console.log("error getting data from cache")
-                    let res = await api.get(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, { 
-                        params: {
-                            type: 'public',
-                            per_page: 100,
-                            page: page
-                        }
-                    })
-                    repos = repos.concat(res.data)
-        
-                    if (res.data.length > 99) repos = repos.concat(await getRepos(page + 1))
-        
-                    resolve(repos)
+                    try {
+                        let res = await api.get(`${GITHUB_BASE_URL}/orgs/DataDog/repos`, { 
+                            params: {
+                                type: 'public',
+                                per_page: 100,
+                                page: page
+                            }
+                        })
+                        repos = repos.concat(res.data)
+            
+                        if (res.data.length > 99) repos = repos.concat(await getRepos(page + 1))
+            
+                        resolve(repos)
+                    } catch(error:any) {
+
+                    }
                 }
                 resolve(value)
               });
@@ -53,7 +56,7 @@ const getReleses = async (repo:any) => {
                         let releases = await api.get(`${GITHUB_BASE_URL}/repos/DataDog/${repo.name}/releases/latest`)                
                         resolve(releases.data)
                     } catch(error:any) {
-                        console.log("issue getting releases")
+                        
                     }
                 }
                 resolve(value)
@@ -79,9 +82,10 @@ const filterRepos = (repos:any) => {
     
             await Promise.all(repos.map(async (r:any) => {
                 try {
-                    if (r.name.match(/^dd-agent$/gm) || r.name.match(/^datadog-agent$/gm)) {
+                    if (r.name.match(/^dd-agent$/gm) /*|| r.name.match(/^datadog-agent$/gm)*/) {
                         r.release = await getReleses(r)
                         filteredResult.agent.push(r)
+                        console.log(r)
                     }
                     else if (r.name.match(/(.+)-datadog$/gm) || r.name.match(/(.+)-datadog-agent$/gm)) {
                         r.release = await getReleses(r)
@@ -111,8 +115,6 @@ const filterRepos = (repos:any) => {
                     // don't add a repo with no latest release...
                 }
             }))
-
-            console.log(filteredResult)
     
             resolve(filteredResult)
         } catch(error:any) {

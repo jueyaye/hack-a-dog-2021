@@ -44,7 +44,7 @@ function VersionCard(props:any) {
       />
       <CardContent>
         <Typography variant="body2" component="p">
-          Integration description
+          
         </Typography>
       </CardContent>
     </Card>
